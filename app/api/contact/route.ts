@@ -2,31 +2,31 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 
 export async function POST(request: Request) {
-  try {
-    const body = await request.json();
 
-    const { client } = await connectToDatabase();
-    const db = client.db("solvify");
-    const col = db.collection("contacts");
-
-    const result = await col.insertOne({
+  const { client } = await connectToDatabase();
+  const db = client.db("");
+  const col = db.collection("contact");
+  const body = await request.json();
+  const contact = {
       name: body.name,
       email: body.email,
       phone: body.phone,
       message: body.message,
-      createdAt: new Date(),
-    });
+      date: new Date(),
+    };
+
+  try {
+    await col.insertOne(contact)
 
     return NextResponse.json(
       {
         success: true,
         message: "Contact saved successfully",
-        id: result.insertedId,
       },
-      { status: 201 }
     );
 
   } catch (error) {
+    console.error("Error Saving Contact")
     return NextResponse.json(
       {
         success: false,
