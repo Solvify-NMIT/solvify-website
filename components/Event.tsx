@@ -1,133 +1,155 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import Image from "next/image";
-import Slider from "react-slick";
+import React, { useState, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+// This imports your actual local data
 import events from "@/lib/data/events.json";
 
 const Event = () => {
-  const sliderRef = useRef<Slider | null>(null);
-  const [slideIndex, setSlideIndex] = useState<number>(0);
+  // Flatten your nested JSON structure (Events -> Photos) into a single list
+  // so that every poster becomes a separate slide in the 3D carousel.
+  const eventData = useMemo(() => {
+    const flattened: { id: string; name: string; img: string }[] = [];
+    events.forEach((event: any, i: number) => {
+      event.photos.forEach((pic: any, j: number) => {
+        flattened.push({
+          id: `event-${i}-pic-${j}`,
+          name: event.name,
+          img: pic.img, // This uses your exact local paths from events.json
+        });
+      });
+    });
+    return flattened;
+  }, []);
 
-  const settings = {
-    infinite: true,
-    speed: 800,
-    slidesToShow: 3,
-    slidesToScroll: 3,
-    arrows: false,
-    dots: false,
-    beforeChange: (_: any, next: any) => {
-      setSlideIndex(next);
-    },
-    responsive: [
-      {
-        breakpoint: 1000,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
-      {
-        breakpoint: 700,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const nextSlide = () => {
+    setActiveIndex((prev) => (prev + 1) % eventData.length);
+  };
+
+  const prevSlide = () => {
+    setActiveIndex((prev) => (prev - 1 + eventData.length) % eventData.length);
   };
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-x-hidden bg-[#050505] text-white py-12 md:py-20">
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#050505] text-white py-20">
+      
+      {/* Background Ambient Glows (Gold Solvify Theme) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#FFD700]/10 blur-[120px] rounded-full pointer-events-none z-0" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[#FFD700]/5 blur-[80px] rounded-full pointer-events-none z-0" />
+
       {/* Title Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="mb-8 md:mb-[5vh] z-10 w-full"
+        className="mb-16 z-10 w-full text-center"
       >
-        <h1 className="font-bebas text-[clamp(2.5rem,6vw,5rem)] font-black uppercase tracking-wide text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] text-center px-4">
+        <h1 className="font-bebas text-[clamp(3rem,8vw,6rem)] font-black uppercase tracking-[0.1em] text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
           Events
         </h1>
-        <div className="mx-auto mt-4 h-[3px] w-[100px] bg-[#FFD700] shadow-[0_0_15px_rgba(255,215,0,0.4)]"></div>
+        <div className="mx-auto mt-2 h-[4px] w-[80px] bg-[#FFD700] rounded-full shadow-[0_0_10px_rgba(255,215,0,0.5)]"></div>
       </motion.div>
 
-      {/* Carousel Container */}
-      <div className="flex flex-col w-[90%] lg:w-[85%] max-w-[1400px] mx-auto">
-        {/* Slider Wrapper */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-full h-full mx-auto mt-[5vh] p-2 pt-2 bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] border-2 border-[#FFD700] rounded-lg shadow-[0_0_30px_rgba(255,215,0,0.3)]"
-        >
-          <Slider ref={sliderRef} {...settings}>
-            {events.map((event, i) => {
-              return event.photos.map((pic, j) => {
-                return (
-                  <div
-                    key={`event${i}pic${j}`}
-                    className=""
-                  >
-                    <div className="relative w-full aspect-square overflow-hidden shadow-[0_0_15px_rgba(255,215,0,0.2)] transition-all duration-300">
-                      <Image
-                        src={pic.img}
-                        alt={`${event.name} - Photo ${j + 1}`}
-                        fill
-                        sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw"
-                        className="object-cover"
-                      />
-                    </div>
-                  </div>
-                );
-              });
-            })}
-          </Slider>
-        </motion.div>
+      {/* 3D Carousel Container */}
+      <div className="relative w-full max-w-[1400px] h-[500px] flex items-center justify-center perspective-[1200px] z-10">
+        <div className="relative w-full h-full flex items-center justify-center transform-style-3d">
+          {eventData.map((event, index) => {
+            const offset = index - activeIndex;
+            const isCenter = index === activeIndex;
+            const absOffset = Math.abs(offset);
 
-        {/* Event Indicators */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="w-full mx-auto mt-8 md:mt-12 text-white font-montserrat"
-        >
-          {/* Scrollable Container */}
-          <div className="overflow-x-auto w-full pb-4 scrollbar-hide">
-            {/* Inner Expanding Container */}
-            <div className="relative min-w-full w-max flex flex-row justify-center items-start gap-4 md:gap-8 px-4 md:px-0">
-              {/* Connector Line */}
-              <div className="absolute top-[12px] md:top-[16px] left-0 w-full h-[2px] bg-[#FFD700]/50" />
+            // Hide cards that are too far away for performance
+            if (absOffset > 2) return null;
 
-              {events.map((event, i) => {
-                const photosPerEvent = event.photos.length;
-                const startIndex = events.slice(0, i).reduce((acc, e) => acc + e.photos.length, 0);
-                const isActive = slideIndex >= startIndex && slideIndex < startIndex + photosPerEvent;
-                return (
-                  <div
-                    key={`eventname${i}`}
-                    onClick={() => sliderRef.current?.slickGoTo(startIndex)}
-                    className="flex flex-col items-center cursor-pointer group transition-all duration-300 relative z-10 w-24 md:w-32"
-                  >
-                    <div
-                      className={`${isActive ? "w-6 md:w-8 scale-110" : "w-3 md:w-4"} transition-all h-6 md:h-8 rounded-md bg-[#FFD700] shadow-[0_0_10px_rgba(255,215,0,0.6)]`}
-                    ></div>
-                    <p className={`mt-3 text-center text-xs sm:text-sm md:text-base font-medium transition-colors duration-300 ${isActive ? "text-[#FFD700]" : "text-white/70"} drop-shadow-[0_0_8px_rgba(255,215,0,0.3)] break-words w-full`}>
-                      {event.name}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </motion.div>
+            return (
+              <motion.div
+                key={event.id}
+                initial={false}
+                animate={{
+                  x: offset * 280, 
+                  rotateY: offset * -45, 
+                  z: isCenter ? 150 : -150, 
+                  scale: isCenter ? 1.15 : 0.85, 
+                  opacity: absOffset > 1 ? 0.4 : 1, 
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 260,
+                  damping: 25,
+                }}
+                onClick={() => setActiveIndex(index)}
+                className={`absolute w-[300px] md:w-[350px] aspect-[3/4] cursor-pointer rounded-2xl overflow-hidden border-[1px] ${
+                  isCenter ? "border-[#FFD700] shadow-[0_0_50px_rgba(255,215,0,0.3)]" : "border-white/10"
+                } transition-shadow duration-500`}
+                style={{
+                    zIndex: 10 - absOffset,
+                    transformStyle: "preserve-3d"
+                }}
+              >
+                <div className="relative w-full h-full group">
+                  <img
+                    src={event.img} // THIS REFERENCES YOUR LOCAL IMAGES
+                    alt={event.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    onError={(e) => {
+                      // Fallback just in case a path is broken
+                      e.currentTarget.src = "https://via.placeholder.com/400x600?text=Poster+Missing";
+                    }}
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent transition-opacity duration-300 ${isCenter ? "opacity-100" : "opacity-0"}`} />
+                  
+                  {isCenter && (
+                    <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="absolute bottom-6 left-6 right-6"
+                    >
+                        <p className="font-bebas text-2xl tracking-widest text-[#FFD700] drop-shadow-md">
+                            {event.name}
+                        </p>
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
+
+      {/* Navigation Controls */}
+      <div className="mt-12 flex items-center gap-8 z-20">
+        <button 
+          onClick={prevSlide}
+          className="p-4 rounded-full border border-white/10 bg-white/5 hover:bg-[#FFD700]/20 hover:border-[#FFD700]/50 transition-all text-white group"
+        >
+          <ChevronLeft className="group-hover:-translate-x-1 transition-transform" />
+        </button>
+        
+        <div className="flex gap-2">
+            {eventData.map((_, i) => (
+                <div 
+                    key={i} 
+                    className={`h-1.5 transition-all duration-300 rounded-full ${i === activeIndex ? "w-8 bg-[#FFD700]" : "w-2 bg-white/20"}`}
+                />
+            ))}
+        </div>
+
+        <button 
+          onClick={nextSlide}
+          className="p-4 rounded-full border border-white/10 bg-white/5 hover:bg-[#FFD700]/20 hover:border-[#FFD700]/50 transition-all text-white group"
+        >
+          <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+        </button>
+      </div>
+
+      <style>{`
+        .perspective-1200 { perspective: 1200px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+      `}</style>
     </div>
   );
 };
