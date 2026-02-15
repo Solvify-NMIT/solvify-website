@@ -1,163 +1,192 @@
 "use client";
 
 import React, { useRef } from "react";
-import { motion, useScroll, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
 import { 
   Code2, 
   Palette, 
   PenTool, 
   Users2, 
   Settings, 
-  Share2 
+  Share2,
+  Zap
 } from "lucide-react";
 
-// Data matching the 6 domains of Solvify
 const domains = [
   {
-    id: 1,
+    id: "SLV-001",
     title: "TECHNICAL",
-    subtitle: "Core Development",
+    subtitle: "Core Architecture",
     description: "The architects of Solvify. We handle everything from web development and app creation to integrating AI and solving complex logic challenges.",
-    icon: <Code2 className="w-6 h-6" />,
-    color: "#FFD700",
+    icon: <Code2 className="w-5 h-5" />,
+    specs: ["Latency: <50ms", "Stack: Full-Stack", "Auth: Encrypted"],
+    coords: "40.7128° N"
   },
   {
-    id: 2,
+    id: "SLV-002",
     title: "DESIGN",
-    subtitle: "Visual Storytelling",
+    subtitle: "UI/UX Dynamics",
     description: "Visualizers who bring the club's identity to life. We focus on UI/UX, branding, motion graphics, and ensuring every touchpoint is immersive.",
-    icon: <Palette className="w-6 h-6" />,
-    color: "#FFD700",
+    icon: <Palette className="w-5 h-5" />,
+    specs: ["DPI: 300+", "UX: Fluid-Motion", "Type: Variable"],
+    coords: "74.0060° W"
   },
   {
-    id: 3,
+    id: "SLV-003",
     title: "CONTENT",
-    subtitle: "The Narrative Voice",
+    subtitle: "Logic Narrative",
     description: "Translating tech into stories. Our domain handles technical writing, blogging, and documentation to make innovation accessible to everyone.",
-    icon: <PenTool className="w-6 h-6" />,
-    color: "#FFD700",
+    icon: <PenTool className="w-5 h-5" />,
+    specs: ["Syntax: Markdown", "SEO: Optimized", "Tone: Technical"],
+    coords: "34.0522° N"
   },
   {
-    id: 4,
+    id: "SLV-004",
     title: "PR",
-    subtitle: "Global Networking",
+    subtitle: "External Interface",
     description: "Building bridges. We connect Solvify with industry experts, other communities, and handle corporate relations to expand our ecosystem.",
-    icon: <Users2 className="w-6 h-6" />,
-    color: "#FFD700",
+    icon: <Users2 className="w-5 h-5" />,
+    specs: ["Nodes: 500+", "Protocol: TCP/IP", "Relay: Active"],
+    coords: "118.2437° W"
   },
   {
-    id: 5,
+    id: "SLV-005",
     title: "OPERATIONS",
-    subtitle: "Strategic Engine",
+    subtitle: "Process Engine",
     description: "The backbone of every event. We manage logistics, timelines, and execution to ensure our projects run with clockwork precision.",
-    icon: <Settings className="w-6 h-6" />,
-    color: "#FFD700",
+    icon: <Settings className="w-5 h-5" />,
+    specs: ["Uptime: 99.9%", "Load: Optimized", "Sync: Real-time"],
+    coords: "51.5074° N"
   },
   {
-    id: 6,
+    id: "SLV-006",
     title: "SOCIAL MEDIA",
-    subtitle: "Digital Pulse",
+    subtitle: "Signal Broadcast",
     description: "Managing the buzz. We curate our digital footprint across platforms, engaging the community and keeping everyone updated with the latest trends.",
-    icon: <Share2 className="w-6 h-6" />,
-    color: "#FFD700",
+    icon: <Share2 className="w-5 h-5" />,
+    specs: ["Freq: 2.4GHz", "Pulse: Social", "Stream: Live"],
+    coords: "0.1278° W"
   },
 ];
 
 const Domains = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  
-  // Scroll progress for the vertical timeline line
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start center", "end center"],
-  });
-
-  const scaleY = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
+  const containerRef = useRef(null);
 
   return (
-    <div ref={containerRef} className="relative w-full bg-[#050505] text-white py-24 px-4 overflow-hidden">
+    <div ref={containerRef} className="relative w-full bg-[#030303] text-white py-32 px-4 overflow-hidden font-mono">
       
-      {/* Section Header */}
+      {/* Blueprint Grid Overlay */}
+      <div className="absolute inset-0 opacity-[0.05] pointer-events-none" 
+           style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: '40px 40px' }} />
+      
+      {/* Background Technical Decoration */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden select-none">
+         <div className="absolute top-10 left-10 text-[10px] text-white/20 uppercase tracking-[0.5em]">SYSTEM_VERSION_4.0.1</div>
+         <div className="absolute bottom-10 right-10 text-[10px] text-white/20 uppercase tracking-[0.5em]">AUTH_SOLVIFY_CORE</div>
+      </div>
+
       <div className="relative z-10 text-center mb-24">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className="inline-block px-4 py-1 mb-4 border border-[#FFD700]/30 rounded-sm text-[10px] text-[#FFD700] tracking-[0.3em]"
+        >
+          CORE COMPONENTS // REV_06
+        </motion.div>
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="font-bebas text-[clamp(3rem,8vw,6rem)] font-black uppercase tracking-widest text-white"
+          className="font-bebas text-[clamp(2.5rem,8vw,5rem)] font-black uppercase tracking-tighter text-white"
         >
-          OUR <span className="text-[#FFD700] drop-shadow-[0_0_15px_rgba(255,215,0,0.3)]">DOMAINS</span>
+          OUR <span className="text-[#FFD700] italic">DOMAINS</span>
         </motion.h1>
-        <div className="mx-auto mt-4 h-[3px] w-[100px] bg-[#FFD700] shadow-[0_0_15px_rgba(255,215,0,0.4)]"></div>
       </div>
 
       <div className="max-w-7xl mx-auto relative">
-        
-        {/* The Central Vertical Line */}
-        <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-[2px] bg-white/10 z-0">
-          <motion.div 
-            style={{ scaleY, originY: 0 }}
-            className="w-full h-full bg-gradient-to-b from-[#FFD700] via-[#FFD700] to-[#E5C100] shadow-[0_0_15px_rgba(255,215,0,0.5)]"
-          />
-        </div>
-
-        {/* Domain Timeline Items */}
-        <div className="flex flex-col gap-24">
-          {domains.map((domain, index) => {
-            const isEven = index % 2 === 0;
-
+        {/* Domain Grid System - No Timeline */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {domains.map((domain) => {
             return (
-              <div 
+              <motion.div 
                 key={domain.id} 
-                className={`relative flex flex-col md:flex-row items-center w-full ${isEven ? 'md:flex-row-reverse' : ''}`}
+                className="relative group cursor-crosshair"
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
               >
-                {/* The Timeline Dot */}
-                <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 w-8 h-8 rounded-full bg-[#050505] border-2 border-[#FFD700] z-20 flex items-center justify-center shadow-[0_0_10px_rgba(255,215,0,0.4)]">
-                   <div className="w-2 h-2 rounded-full bg-[#FFD700] animate-pulse" />
-                </div>
+                {/* Technical Frame */}
+                <div className="absolute inset-0 border border-white/10 group-hover:border-[#FFD700]/50 transition-colors duration-500" />
+                
+                {/* Corner Marks */}
+                <div className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-[#FFD700]/40 group-hover:border-[#FFD700]" />
+                <div className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-[#FFD700]/40 group-hover:border-[#FFD700]" />
 
-                {/* Content Card Area */}
-                <div className={`w-full md:w-1/2 ${isEven ? 'md:pl-16' : 'md:pr-16'} pl-12 pr-4`}>
-                  <motion.div
-                    initial={{ opacity: 0, x: isEven ? 50 : -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="relative p-6 md:p-8 rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-sm hover:bg-white/[0.06] hover:border-[#FFD700]/30 transition-all duration-500 group"
-                  >
-                    {/* Badge / Subtitle */}
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFD700]/10 border border-[#FFD700]/20 text-[#FFD700] text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+                <div className="p-8 bg-white/[0.02] backdrop-blur-md group-hover:bg-[#FFD700]/[0.03] transition-all duration-500 h-full flex flex-col">
+                  {/* ID Tag */}
+                  <div className="flex justify-between items-start mb-6">
+                    <span className="text-[10px] text-white/30 tracking-widest font-mono">ID: {domain.id}</span>
+                    <div className="text-[#FFD700] opacity-50 group-hover:opacity-100 group-hover:rotate-12 transition-all">
                       {domain.icon}
-                      {domain.subtitle}
                     </div>
+                  </div>
 
-                    <h2 className="font-bebas text-3xl md:text-4xl tracking-wider text-white mb-4 group-hover:text-[#FFD700] transition-colors">
-                      {domain.title}
-                    </h2>
-                    
-                    <p className="font-montserrat text-sm md:text-base leading-relaxed text-white/60 group-hover:text-white/80 transition-colors">
-                      {domain.description}
-                    </p>
+                  <h2 className="font-bebas text-3xl tracking-tight text-white mb-1 group-hover:text-[#FFD700] transition-colors uppercase">
+                    {domain.title}
+                  </h2>
+                  <div className="text-[10px] text-[#FFD700]/60 mb-4 tracking-[0.2em] font-bold uppercase italic">
+                    {domain.subtitle}
+                  </div>
+                  
+                  <p className="font-montserrat text-sm leading-relaxed text-white/50 group-hover:text-white/80 transition-colors mb-8 flex-grow">
+                    {domain.description}
+                  </p>
 
-                    {/* Decorative Corner Element */}
-                    <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-100 transition-opacity">
-                      <div className="w-12 h-12 border-t-2 border-r-2 border-[#FFD700] rounded-tr-xl" />
-                    </div>
-                  </motion.div>
+                  {/* Technical Specs Overlay (Active on hover) */}
+                  <div className="grid grid-cols-1 gap-2 border-t border-white/10 pt-4">
+                    {domain.specs.map((spec, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <div className="w-1 h-1 bg-[#FFD700]/40" />
+                        <span className="text-[9px] uppercase tracking-tighter text-white/30 group-hover:text-[#FFD700]/80 transition-colors">
+                          {spec}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Decorative Coordinate */}
+                  <div className="absolute bottom-2 right-2 text-[8px] text-white/10 font-mono group-hover:text-[#FFD700]/20">
+                    LOC_{domain.coords}
+                  </div>
                 </div>
 
-                {/* Empty space for the other side on desktop */}
-                <div className="hidden md:block md:w-1/2" />
-              </div>
+                {/* Laser Scanner Line Effect */}
+                <motion.div 
+                  initial={{ top: "0%" }}
+                  animate={{ top: ["0%", "100%", "0%"] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                  className="absolute left-0 right-0 h-[1px] bg-[#FFD700]/20 group-hover:bg-[#FFD700]/50 pointer-events-none z-30"
+                />
+              </motion.div>
             );
           })}
         </div>
       </div>
 
-      {/* Watermark removed as requested */}
+      {/* Footer Design Specs */}
+      <div className="max-w-7xl mx-auto mt-24 pt-8 border-t border-white/5 flex flex-wrap justify-between items-center gap-4">
+        <div className="flex gap-8 text-[9px] text-white/20 uppercase tracking-widest">
+           <div>SCALE: 1:25</div>
+           <div>COORD: GLOBAL_GRID</div>
+           <div>STATUS: OPERATIONAL</div>
+        </div>
+        <div className="flex items-center gap-2 text-[#FFD700]/40 text-[9px]">
+           <Zap className="w-3 h-3" />
+           POWER_LEVEL: STABLE
+        </div>
+      </div>
+
     </div>
   );
 };
