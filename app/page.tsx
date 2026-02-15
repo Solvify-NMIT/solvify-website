@@ -3,7 +3,7 @@
 import AboutUs from "@/components/AboutUs";
 import Instagram from "@/components/Instagram";
 import Event from "@/components/Event";
-import Domains from "@/components/Domains"; 
+//import TeamHome from "@/components/TeamHome";
 import ContactUsHome from "@/components/ContactUsHome";
 import HomePage from "@/components/HomePage";
 import Navbar from "@/components/Navbar";
@@ -17,14 +17,20 @@ export default function Home() {
     const [startDecipher, setStartDecipher] = useState(false);
 
     const handleIntroComplete = () => {
+        // Step 1: Mark intro as finished
         setIntroComplete(true);
+
+        // Step 2: Reset scroll position to ensure user starts at the top of the content
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+        // Step 3: Trigger the decipher animation on the landing page content
         setTimeout(() => {
             setStartDecipher(true);
             setContentVisible(true);
         }, 100);
     };
 
+    // Prevent scrolling while the intro animation is active
     useEffect(() => {
         if (!introComplete) {
             document.body.style.overflow = 'hidden';
@@ -35,12 +41,12 @@ export default function Home() {
 
     return (
         <>
-            {/* 1. ANIMATION LAYER */}
+            {/* 1. ANIMATION LAYER: Handles the drawing, terminal, and flying logo */}
             {!introComplete && (
                 <Loader onIntroComplete={handleIntroComplete} />
             )}
 
-            {/* 2. CONTENT LAYER */}
+            {/* 2. CONTENT LAYER: Visible only after the intro is complete */}
             <div
                 id="content-container"
                 className={`relative z-10 transition-opacity duration-500 ${contentVisible ? "opacity-100" : "opacity-0"}`}
@@ -48,25 +54,21 @@ export default function Home() {
                 <Navbar />
 
                 <div id="main-content-wrapper" className="relative z-10">
-                    {/* Hero Section */}
+
+                    {/* Hero Section (Page 1): Now contains static content and deciphering text */}
                     <HomePage startDecipher={startDecipher} />
 
+                    {/* Scrollable Content: Sections that flow below the fold */}
                     <div id="subsequent-sections">
                         <section id="about">
                             <AboutUs />
                         </section>
-                        
-                        {/* Events Section comes first */}
                         <section id="events">
                             <Event />
                         </section>
-
-                        {/* Domains Section now follows Events */}
-                        <section id="domain">
-                            <Domains />
-                        </section>
-
-                        {/* Footer / Contact Section */}
+                        {/* <TeamHome /> */}
+                        {/* <Instagram/> */}
+                        {/* <ContactUsHome/> */}
                         <section id="contact">
                             <Footer />
                         </section>
