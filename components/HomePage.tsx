@@ -60,7 +60,7 @@ const HomePage = ({ startDecipher }: { startDecipher: boolean }) => {
                             y="50%"
                             dy=".35em"
                             textAnchor="middle"
-                            className="font-bebas text-[70vw] md:text-[200px] tracking-wide fill-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] stroke-none"
+                            className="font-bebas text-[200px] tracking-wide fill-white drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] stroke-none"
                         >
                             SOLVIFY
                         </text>

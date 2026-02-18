@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 type NavbarProps = {
@@ -9,7 +10,11 @@ type NavbarProps = {
 };
 
 const Navbar = ({ skipIntro = false }: NavbarProps) => {
+  const pathname = usePathname();
+  const isByteBattle = pathname === '/events/byte-battle';
   const [isVisible, setIsVisible] = useState(skipIntro);
+
+  if (isByteBattle) return null;
   const [isOpen, setIsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
@@ -64,12 +69,13 @@ const Navbar = ({ skipIntro = false }: NavbarProps) => {
 
   const leftLinks = [
     { name: "HOME", path: "/" },
-    { name: "ABOUT US", path: "#about" },
-    { name: "EVENTS", path: "#events" },
+    { name: "ABOUT US", path: "/#about" },
+    { name: "EVENTS", path: "/#events" },
   ];
 
   const rightLinks = [
     // { name: "PROJECTS", path: "#projects" },
+    { name: "DOMAINS", path: "/#domains" },
     { name: "TEAM", path: "/team" },
     { name: "CONTACT US", path: "/contact" },
   ];
@@ -146,6 +152,7 @@ const Navbar = ({ skipIntro = false }: NavbarProps) => {
                 `}
             >
               {/* Responsive logo image size */}
+              {/* Responsive logo image size */}
               <img
                 src="/solvify-logo.png"
                 alt="Solvify"
@@ -183,6 +190,7 @@ const Navbar = ({ skipIntro = false }: NavbarProps) => {
               `}
               aria-label="Toggle menu"
             >
+              {/* Logo image */}
               {/* Logo image */}
               <img
                 src="/solvify-logo.png"
@@ -281,15 +289,24 @@ const NavLink = ({
 }) => {
 
   // Prevent navigation for development stage
+  // Handle navigation and scrolling
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    // Only prevent default if the link is an internal fragment link
-    if (item.path.startsWith('#') && item.path !== '#') {
-      e.preventDefault();
-      // You can add smooth scrolling logic here later if needed
-      const element = document.getElementById(item.path.slice(1));
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+    const isHome = window.location.pathname === '/';
+    const targetPath = item.path;
+
+    // Check if it's a hash link or a link to a section on the home page
+    if (targetPath.includes('#')) {
+      const [path, hash] = targetPath.split('#');
+
+      // If we are already on the home page and the link is for the home page (or just a hash)
+      if (isHome && (path === '/' || path === '')) {
+        e.preventDefault();
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
       }
+      // If we are NOT on the home page, let Next.js Link handle the navigation to /#hash
     }
 
     // Close sidebar on mobile when link is clicked
