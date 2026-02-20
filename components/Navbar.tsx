@@ -64,7 +64,6 @@ const Navbar = ({ skipIntro = false }: NavbarProps) => {
 
   const leftLinks = [
     { name: "HOME", path: "/" },
-    { name: "ABOUT US", path: "#about" },
     { name: "UPCOMING EVENT", path: "/upcomingevent" },
   ];
 
