@@ -38,7 +38,7 @@ const eventsDataRaw = [
 const Event = () => {
   // Flattening the nested structure into a single list for the 3D carousel
   const eventData = useMemo(() => {
-    const flattened = [];
+    const flattened: any[] = [];
     eventsDataRaw.forEach((event, i) => {
       event.photos.forEach((pic, j) => {
         flattened.push({
@@ -64,7 +64,7 @@ const Event = () => {
 
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-[#050505] text-white py-10">
-      
+
       {/* Background Ambient Glows (Gold Solvify Theme) */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#FFD700]/10 blur-[100px] rounded-full pointer-events-none z-0" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[200px] bg-[#FFD700]/5 blur-[60px] rounded-full pointer-events-none z-0" />
@@ -98,11 +98,11 @@ const Event = () => {
                 key={event.id}
                 initial={false}
                 animate={{
-                  x: offset * 310, 
-                  rotateY: offset * -35, 
-                  z: isCenter ? 120 : -120, 
-                  scale: isCenter ? 1.05 : 0.75, 
-                  opacity: absOffset > 1 ? 0.3 : 1, 
+                  x: offset * 310,
+                  rotateY: offset * -35,
+                  z: isCenter ? 120 : -120,
+                  scale: isCenter ? 1.05 : 0.75,
+                  opacity: absOffset > 1 ? 0.3 : 1,
                 }}
                 transition={{
                   type: "spring",
@@ -110,9 +110,8 @@ const Event = () => {
                   damping: 25,
                 }}
                 onClick={() => setActiveIndex(index)}
-                className={`absolute w-[250px] md:w-[350px] h-[215px] md:h-[290px] cursor-pointer rounded-xl overflow-hidden border-[1px] ${
-                  isCenter ? "border-[#FFD700] shadow-[0_0_40px_rgba(255,215,0,0.2)]" : "border-white/10"
-                } transition-shadow duration-500`}
+                className={`absolute w-[250px] md:w-[350px] h-[215px] md:h-[290px] cursor-pointer rounded-xl overflow-hidden border-[1px] ${isCenter ? "border-[#FFD700] shadow-[0_0_40px_rgba(255,215,0,0.2)]" : "border-white/10"
+                  } transition-shadow duration-500`}
                 style={{
                   zIndex: 10 - absOffset,
                   transformStyle: "preserve-3d"
@@ -129,22 +128,22 @@ const Event = () => {
                   />
                   {/* Darker gradient for text readability */}
                   <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent transition-opacity duration-300 ${isCenter ? "opacity-100" : "opacity-0"}`} />
-                  
+
                   {isCenter && (
-                    <motion.div 
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="absolute bottom-3 left-4 right-4 z-20"
+                    <motion.div
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 }}
+                      className="absolute bottom-3 left-4 right-4 z-20"
                     >
-                        {/* Event Name - Increased Size */}
-                        <p className="font-bebas text-xl md:text-2xl tracking-widest text-[#FFD700] drop-shadow-md leading-none mb-1.5">
-                            {event.name}
-                        </p>
-                        {/* Event Description - Increased Size & Beautified Font */}
-                        <p className="font-outfit text-[12px] md:text-[14px] text-white/95 leading-relaxed font-normal tracking-wide">
-                            {event.description}
-                        </p>
+                      {/* Event Name - Increased Size */}
+                      <p className="font-bebas text-xl md:text-2xl tracking-widest text-[#FFD700] drop-shadow-md leading-none mb-1.5">
+                        {event.name}
+                      </p>
+                      {/* Event Description - Increased Size & Beautified Font */}
+                      <p className="font-outfit text-[12px] md:text-[14px] text-white/95 leading-relaxed font-normal tracking-wide">
+                        {event.description}
+                      </p>
                     </motion.div>
                   )}
                 </div>
@@ -156,23 +155,23 @@ const Event = () => {
 
       {/* Navigation Controls */}
       <div className="mt-6 flex items-center gap-6 z-20">
-        <button 
+        <button
           onClick={prevSlide}
           className="p-3 rounded-full border border-white/10 bg-white/5 hover:bg-[#FFD700]/20 hover:border-[#FFD700]/50 transition-all text-white group"
         >
           <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
         </button>
-        
+
         <div className="hidden md:flex gap-1.5">
-            {eventData.map((_, i) => (
-                <div 
-                    key={i} 
-                    className={`h-1 transition-all duration-300 rounded-full ${i === activeIndex ? "w-6 bg-[#FFD700]" : "w-1.5 bg-white/20"}`}
-                />
-            ))}
+          {eventData.map((_, i) => (
+            <div
+              key={i}
+              className={`h-1 transition-all duration-300 rounded-full ${i === activeIndex ? "w-6 bg-[#FFD700]" : "w-1.5 bg-white/20"}`}
+            />
+          ))}
         </div>
 
-        <button 
+        <button
           onClick={nextSlide}
           className="p-3 rounded-full border border-white/10 bg-white/5 hover:bg-[#FFD700]/20 hover:border-[#FFD700]/50 transition-all text-white group"
         >
